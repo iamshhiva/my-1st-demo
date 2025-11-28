@@ -9,7 +9,7 @@ on:
           action:
               description: 'Terraform action to perform'
               requred: true
-              default:'apply'
+              default: apply
               type: choice
               options:
                   - apply 
@@ -27,28 +27,29 @@ jobs:
       - name: checkout code
         run: actions/checkout@4
         
-        - name: configure AWS
+      - name: configure AWS
         run: aws-actions/configure-aws-credentials@4
         with: 
          aws-access-key-id : ${{secreats.AWS_ACCESS_KEY_ID}}
          aws-secret-access-key: ${{secreats.AWS_SECRET_KEY_ID}}
-         aws-region: ${{ev.AWS_REGION}}
-
-        - name: setup Terraform
+         aws-region: ${{ev.AWS_REGION}}\
+         
+      - name: setup Terraform
         run: hashicorp/setup-terraform@v3
         with:
           terraform : ${{ev.TF_VERSION}}
         
-        - name: Terraform init stage
+      - name: Terraform init stage
         run: terraform init
         
-        - name:  Terraform plan stage
+      - name:  Terraform plan stage
         run: terraform plan
         
-        - name: Terraform apply stage
+      - name: Terraform apply stage
         if: github>event_name == 'puch' || github.event.inputs.action =='apply'
         run: terraform plan -auto-approve
         
-         - name: Terraform destroy stage
+      - name: Terraform destroy stage
         if: github>event_name == 'workflow_dispatch' && github.event.inputs.action =='destroy'
+
         run: terraform destroy -auto-approve
