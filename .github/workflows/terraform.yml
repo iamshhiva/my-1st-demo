@@ -19,36 +19,36 @@ evn:
     TF_VERSION: 1.6.0
 jobs:
   Terraform:
-   name : Run Terraform
+   name : run Terraform
    runs-on : ubuntu-latest
 
 
    steps:
       - name: checkout code
-        Run: actions/checkout@4
+        run: actions/checkout@4
         
         - name: configure AWS
-        Run: aws-actions/configure-aws-credentials@4
+        run: aws-actions/configure-aws-credentials@4
         with: 
          aws-access-key-id : ${{secreats.AWS_ACCESS_KEY_ID}}
          aws-secret-access-key: ${{secreats.AWS_SECRET_KEY_ID}}
          aws-region: ${{ev.AWS_REGION}}
 
         - name: setup Terraform
-        Run: hashicorp/setup-terraform@v3
+        run: hashicorp/setup-terraform@v3
         with:
           terraform : ${{ev.TF_VERSION}}
         
         - name: Terraform init stage
-        Run: terraform init
+        run: terraform init
         
         - name:  Terraform plan stage
-        Run: terraform plan
+        run: terraform plan
         
         - name: Terraform apply stage
         if: github>event_name == 'puch' || github.event.inputs.action =='apply'
-        Run: terraform plan -auto-approve
+        run: terraform plan -auto-approve
         
          - name: Terraform destroy stage
         if: github>event_name == 'workflow_dispatch' && github.event.inputs.action =='destroy'
-        Run: terraform destroy -auto-approve
+        run: terraform destroy -auto-approve
