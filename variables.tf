@@ -7,5 +7,5 @@ variable "cidr_block_vpc" {
 variable "cidr_block_i_can_do" {
   description = "this is the code block"
   defult = "10.0.0./24"
-  type = string 
+  type = string
 }
