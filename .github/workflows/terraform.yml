@@ -1,64 +1,55 @@
-name : Terraform deploy
+name: Terraform deploy
 
 on:
-    push:
-        branches:
-            - main
-    workflow_dispatch:
-      inputs:
-          action:
-              description: 'Terraform action to perform'
-              required: true
-              default: apply
-              type: choice
-              options:
-                  - apply 
-                  - destroy
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Terraform action to perform"
+        required: true
+        default: apply
+        type: choice
+        options:
+          - apply
+          - destroy
+
 env:
-    AWS_REGION: us-east-1
-    TF_VERSION: 1.6.0
+  AWS_REGION: us-east-1
+  TF_VERSION: 1.6.0
+
 jobs:
   terraform:
-    name : run Terraform
-    runs-on : ubuntu-latest
-
+    name: Run Terraform
+    runs-on: ubuntu-latest
 
     steps:
-      - name: checkout code
-        run: actions/checkout@4
-        
-      - name: configure AWS
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v3
-        with: 
-         aws-access-key-id : ${{secrets.AWS_ACCESS_KEY_ID}}
-         aws-secret-access-key: ${{secrets.AWS_SECRET_KEY_ID}}
-         aws-region: ${{env.AWS_REGION}}
-         
-      - name: setup Terraform
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform : ${{env.TF_VERSION}}
-        
-      - name: Terraform init stage
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform init
         run: terraform init
-        
-      - name:  Terraform plan stage
+
+      - name: Terraform plan
         run: terraform plan
-        
-      - name: Terraform apply stage
-        if: github.event_name == 'push' || github.event.inputs.action =='apply'
-        run: terraform plan -auto-approve
-        
-      - name: Terraform destroy stage
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action =='destroy'
 
+      - name: Terraform apply
+        if: github.event_name == 'push' || github.event.inputs.action == 'apply'
+        run: terraform apply -auto-approve
+
+      - name: Terraform destroy
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
         run: terraform destroy -auto-approve
-
-
-
-
-
-
-
-
-
