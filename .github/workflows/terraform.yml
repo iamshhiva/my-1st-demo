@@ -30,8 +30,8 @@ jobs:
       - name: configure AWS
         uses: aws-actions/configure-aws-credentials@4
         with: 
-         aws-access-key-id : ${{secreats.AWS_ACCESS_KEY_ID}}
-         aws-secret-access-key: ${{secreats.AWS_SECRET_KEY_ID}}
+         aws-access-key-id : ${{secrets.AWS_ACCESS_KEY_ID}}
+         aws-secret-access-key: ${{secrets.AWS_SECRET_KEY_ID}}
          aws-region: ${{ev.AWS_REGION}}
          
       - name: setup Terraform
@@ -53,5 +53,6 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.action =='destroy'
 
         run: terraform destroy -auto-approve
+
 
 
