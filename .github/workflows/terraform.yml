@@ -37,7 +37,7 @@ jobs:
       - name: setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform : ${{ev.TF_VERSION}}
+          terraform : ${{env.TF_VERSION}}
         
       - name: Terraform init stage
         run: terraform init
@@ -53,6 +53,7 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.action =='destroy'
 
         run: terraform destroy -auto-approve
+
 
 
 
