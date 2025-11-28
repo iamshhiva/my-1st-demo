@@ -32,7 +32,7 @@ jobs:
         with: 
          aws-access-key-id : ${{secreats.AWS_ACCESS_KEY_ID}}
          aws-secret-access-key: ${{secreats.AWS_SECRET_KEY_ID}}
-         aws-region: ${{ev.AWS_REGION}}\
+         aws-region: ${{ev.AWS_REGION}}
          
       - name: setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -53,4 +53,5 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.action =='destroy'
 
         run: terraform destroy -auto-approve
+
 
