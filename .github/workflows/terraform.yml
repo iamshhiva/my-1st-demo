@@ -25,30 +25,30 @@ jobs:
 
    steps:
       - name: checkout code
-        uses: actions/checkout@4
+        Run: actions/checkout@4
         
         - name: configure AWS
-        uses: aws-actions/configure-aws-credentials@4
+        Run: aws-actions/configure-aws-credentials@4
         with: 
          aws-access-key-id : ${{secreats.AWS_ACCESS_KEY_ID}}
          aws-secret-access-key: ${{secreats.AWS_SECRET_KEY_ID}}
          aws-region: ${{ev.AWS_REGION}}
 
         - name: setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        Run: hashicorp/setup-terraform@v3
         with:
           terraform : ${{ev.TF_VERSION}}
         
         - name: Terraform init stage
-        uses: terraform init
+        Run: terraform init
         
         - name:  Terraform plan stage
-        uses: terraform plan
+        Run: terraform plan
         
         - name: Terraform apply stage
         if: github>event_name == 'puch' || github.event.inputs.action =='apply'
-        uses: terraform plan -auto-approve
+        Run: terraform plan -auto-approve
         
          - name: Terraform destroy stage
         if: github>event_name == 'workflow_dispatch' && github.event.inputs.action =='destroy'
-        uses: terraform destroy -auto-approve
+        Run: terraform destroy -auto-approve
