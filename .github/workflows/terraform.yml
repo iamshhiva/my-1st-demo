@@ -1,20 +1,20 @@
 name : Terraform deploy
 
 on:
-    puch:
-        branch:
+    push:
+        branches:
             - main
     workflow_dispatch:
       inputs:
           action:
               description: 'Terraform action to perform'
-              requred: true
+              required: true
               default: apply
               type: choice
               options:
                   - apply 
                   - destroy
-evn:
+env:
     AWS_REGION: us-east-1
     TF_VERSION: 1.6.0
 jobs:
@@ -28,14 +28,14 @@ jobs:
         run: actions/checkout@4
         
       - name: configure AWS
-        run: aws-actions/configure-aws-credentials@4
+        uses: aws-actions/configure-aws-credentials@4
         with: 
          aws-access-key-id : ${{secreats.AWS_ACCESS_KEY_ID}}
          aws-secret-access-key: ${{secreats.AWS_SECRET_KEY_ID}}
          aws-region: ${{ev.AWS_REGION}}\
          
       - name: setup Terraform
-        run: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform : ${{ev.TF_VERSION}}
         
@@ -46,10 +46,11 @@ jobs:
         run: terraform plan
         
       - name: Terraform apply stage
-        if: github>event_name == 'puch' || github.event.inputs.action =='apply'
+        if: github.event_name == 'push' || github.event.inputs.action =='apply'
         run: terraform plan -auto-approve
         
       - name: Terraform destroy stage
-        if: github>event_name == 'workflow_dispatch' && github.event.inputs.action =='destroy'
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action =='destroy'
 
         run: terraform destroy -auto-approve
+
