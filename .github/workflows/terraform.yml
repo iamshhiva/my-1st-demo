@@ -54,6 +54,3 @@ jobs:
          - name: Terraform destroy stage
         if: github>event_name == 'workflow_dispatch' && github.event.inputs.action =='destroy'
         uses: terraform destroy -auto-approve
-        
-    
-        
