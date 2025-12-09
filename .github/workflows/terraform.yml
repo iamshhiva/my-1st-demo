@@ -1,5 +1,4 @@
 name: Terraform deploy
-(neW)
 
 on:
   push:
@@ -54,4 +53,5 @@ jobs:
       - name: Terraform destroy
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
         run: terraform destroy -auto-approve
+
 
